@@ -16,9 +16,10 @@ class InfDevice : public QMainWindow
 public:
     explicit InfDevice(QWidget *parent = 0);
     ~InfDevice();
+    Ui::InfDevice *ui;
 
 private:
-    Ui::InfDevice *ui;
+
 };
 
 #endif // INFDEVICE_H

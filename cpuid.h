@@ -2,6 +2,7 @@
 #define CPUID_H
 
 #include "infdevice.h"
+#include "ui_infdevice.h"
 
 class cpuid
 {

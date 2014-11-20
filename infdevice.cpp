@@ -8,7 +8,6 @@ InfDevice::InfDevice(QWidget *parent) :
     ui->setupUi(this);
 
     cpuid::view_info();
-
 }
 
 InfDevice::~InfDevice()

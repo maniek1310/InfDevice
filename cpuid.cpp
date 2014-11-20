@@ -1,5 +1,4 @@
 #include "cpuid.h"
-#include "infdevice.h"
 
 cpuid::cpuid()
 {
@@ -9,12 +8,19 @@ void cpuid::view_info()
 {
     unsigned long version_info = Ver_info();
     unsigned char Family;
+    unsigned char fpu;
+
+    fpu = (version_info & 0x1);
 
     Family = (version_info & 0x0F00) >> 8;
 
     qDebug() << Family;
 
     qDebug() << Brand();
+
+    qDebug() << "FPU : " << fpu;
+
+    //InfDevice::ui->pushButton->setText("fsdf");
 }
 
 QString cpuid::VendorID()
