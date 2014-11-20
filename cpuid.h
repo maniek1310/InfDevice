@@ -11,6 +11,8 @@ public:
     static QString VendorID();
     static QString VendorID_name(QString vendorID);
     static unsigned long Ver_info();
+    static unsigned long Fea_info();
+    static QString Brand();
 };
 
 #endif // CPUID_H
