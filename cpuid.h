@@ -7,7 +7,7 @@ class cpuid
 {
 public:
     cpuid();
-    QString VendorID();
+    static QString VendorID();
 };
 
 #endif // CPUID_H

@@ -6,6 +6,8 @@ InfDevice::InfDevice(QWidget *parent) :
     ui(new Ui::InfDevice)
 {
     ui->setupUi(this);
+
+    cpuid::VendorID();
 }
 
 InfDevice::~InfDevice()

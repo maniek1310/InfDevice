@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDebug>
+#include "cpuid.h"
 
 namespace Ui {
 class InfDevice;

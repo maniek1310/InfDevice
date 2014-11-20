@@ -4,7 +4,7 @@ cpuid::cpuid()
 {
 }
 
-cpuid::VendorID()
+QString cpuid::VendorID()
 {
     char VendorID[13];
 
