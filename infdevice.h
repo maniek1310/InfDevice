@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QDebug>
 #include "cpuid.h"
+#include <math.h>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 namespace Ui {
 class InfDevice;

@@ -7,20 +7,50 @@ cpuid::cpuid()
 void cpuid::view_info()
 {
     unsigned long version_info = Ver_info();
+    unsigned long feature_info_edx = Fea_info_edx();
+    unsigned long feature_info_ecx = Fea_info_ecx();
     unsigned char Family;
     unsigned char fpu;
 
     fpu = (version_info & 0x1);
 
-    Family = (version_info & 0x0F00) >> 8;
+    Family = (feature_info_edx & 0x2000000) >> 25;
 
     qDebug() << Family;
 
     qDebug() << Brand();
 
-    qDebug() << "FPU : " << fpu;
+    char fea_edx_1[32][30] = {"fpu", "vme", "de", "pse", "tsc", "msr",
+                             "pae", "mce", "cx8", "apic", "", "sep",
+                             "mtrr", "pge", "mca", "cmov", "pat", "pse-36",
+                             "psn", "clfsh", "", "ds", "acpi", "mmx",
+                             "fxsr", "sse", "sse2", "ss", "htt", "tm",
+                             "ia64", "pbe"};
 
-    //InfDevice::ui->pushButton->setText("fsdf");
+    char fea_ecx_1[32][30] = {"sse3", "pclmulqdq", "dtes64", "monitor", "ds-cpl", "vmx",
+                          "smx", "est", "tm2", "ssse3", "cnxt-id", "",
+                          "fma", "cx16", "xtpr", "pdcm", "", "pcid",
+                          "dca", "sse4.1", "sse4.2", "x2apic", "movbe", "popcnt",
+                          "tsc-deadline", "aes", "xsave", "osxsave", "avx", "f16c",
+                          "rdrnd", "hypervisor"};
+
+    for(int i = 0; i < 32; i++){
+        if(i != 10 && i != 20)
+        {
+            unsigned double potega = pow(2.0, i);
+            qDebug() << fea_edx_1[i] << " : " << ((feature_info_edx & potega) >> i);
+        }
+    }
+
+    for(int i = 0; i < 32; i++){
+        if(i != 11 && i != 16)
+        {
+            unsigned double potega = pow(2.0, i);
+            qDebug() << fea_ecx_1[i] << " : " << ((feature_info_ecx & potega) >> i);
+        }
+    }
+
+    qDebug() << feature_info_edx;
 }
 
 QString cpuid::VendorID()
@@ -77,7 +107,7 @@ unsigned long cpuid::Ver_info()
     return VersionInfo;
 }
 
-unsigned long cpuid::Fea_info()
+unsigned long cpuid::Fea_info_edx()
 {
     unsigned long FeatureInfo;
 
@@ -86,6 +116,20 @@ unsigned long cpuid::Fea_info()
         mov eax, 1
         cpuid
         mov FeatureInfo, edx
+    }
+
+    return FeatureInfo;
+}
+
+unsigned long cpuid::Fea_info_ecx()
+{
+    unsigned long FeatureInfo;
+
+    __asm
+    {
+        mov eax, 1
+        cpuid
+        mov FeatureInfo, ecx
     }
 
     return FeatureInfo;
