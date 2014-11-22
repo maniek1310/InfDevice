@@ -15,6 +15,8 @@ public:
     static unsigned long Fea_info_edx();
     static unsigned long Fea_info_ecx();
     static QString Brand();
+    static unsigned long ext_family();
+    static unsigned long socket();
 };
 
 #endif // CPUID_H

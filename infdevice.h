@@ -8,6 +8,7 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QTreeWidgetItem>
 
 namespace Ui {
 class InfDevice;
@@ -20,10 +21,13 @@ class InfDevice : public QMainWindow
 public:
     explicit InfDevice(QWidget *parent = 0);
     ~InfDevice();
-    Ui::InfDevice *ui;
+
+private slots:
+    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
+    void insert_treewidget_item(QString text, int column, QString text2, int column2);
 
 private:
-
+    Ui::InfDevice *ui;
 };
 
 #endif // INFDEVICE_H

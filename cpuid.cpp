@@ -6,19 +6,10 @@ cpuid::cpuid()
 
 void cpuid::view_info()
 {
-    unsigned long version_info = Ver_info();
     unsigned long feature_info_edx = Fea_info_edx();
     unsigned long feature_info_ecx = Fea_info_ecx();
-    unsigned char Family;
-    unsigned char fpu;
 
-    fpu = (version_info & 0x1);
-
-    Family = (feature_info_edx & 0x2000000) >> 25;
-
-    qDebug() << Family;
-
-    qDebug() << Brand();
+    socket();
 
     char fea_edx_1[32][30] = {"fpu", "vme", "de", "pse", "tsc", "msr",
                              "pae", "mce", "cx8", "apic", "", "sep",
@@ -242,4 +233,32 @@ QString cpuid::Brand()
     }
 
     return Parts;
+}
+
+unsigned long cpuid::ext_family()
+{
+    unsigned long ext_family;
+
+    __asm
+    {
+        mov eax, 80000001h
+        cpuid
+        mov ext_family, eax
+    }
+
+    return ext_family;
+}
+
+unsigned long cpuid::socket()
+{
+    unsigned long socket;
+
+    __asm
+    {
+        mov eax, 80000001h
+        cpuid
+        mov socket, ebx
+    }
+
+    return socket;
 }
