@@ -69,6 +69,13 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDodaj_nowego_u_ytkownika">
+    <property name="title">
+     <string>Dodaj nowego użytkownika</string>
+    </property>
+    <addaction name="actionDodaj"/>
+   </widget>
+   <addaction name="menuDodaj_nowego_u_ytkownika"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -79,6 +86,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionDodaj">
+   <property name="text">
+    <string>Dodaj</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

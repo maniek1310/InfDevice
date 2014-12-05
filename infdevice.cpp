@@ -1,4 +1,4 @@
-#include "infdevice.h"
+﻿#include "infdevice.h"
 #include "ui_infdevice.h"
 
 InfDevice::InfDevice(QWidget *parent) :
@@ -38,6 +38,10 @@ void InfDevice::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
         unsigned long cpu_version_info = cpuid::Ver_info();
         unsigned long cpu_name_ext_family = cpuid::ext_family();
         unsigned long cpu_socket_find = cpuid::socket();
+        unsigned long cache_l1_data = cpuid::cache_l1_data();
+        unsigned long cache_l1_code = cpuid::cache_l1_code();
+        unsigned long cache_l2 = cpuid::cache_l2();
+        unsigned long cache_l3 = cpuid::cache_l3();
         unsigned long cpu_stepping;
         unsigned long cpu_model;
         unsigned long cpu_family;
@@ -93,6 +97,10 @@ void InfDevice::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
         insert_treewidget_item("Extended model : ", 0, QString::number(cpu_ext_model), 1);
         insert_treewidget_item("Extended family : ", 0, QString::number(cpu_ext_family), 1);
         insert_treewidget_item("Socket : ", 0, cpu_socket, 1);
+        insert_treewidget_item("Cache L1 danych : ", 0, (QString::number(cache_l1_data) + " KB"), 1);
+        insert_treewidget_item("Cache L1 kodu : ", 0, (QString::number(cache_l1_code) + " KB"), 1);
+        insert_treewidget_item("Cache L2 : ", 0, (QString::number(cache_l2) + " MB"), 1);
+        insert_treewidget_item("Cache L3 : ", 0, (QString::number(cache_l3) + " MB"), 1);
     }
 }
 
@@ -101,4 +109,116 @@ void InfDevice::insert_treewidget_item(QString text, int column, QString text2, 
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget_2);
     item->setText(column, text);
     item->setText(column2, text2);
+}
+
+void InfDevice::on_actionDodaj_triggered()
+{
+    USER_INFO_1 ui1;
+    DWORD dwLevel = 1;
+    DWORD dwError = 0;
+    NET_API_STATUS nStatus;
+
+    ui1.usri1_name = L"MisiekKoterski3";
+    ui1.usri1_password = L"jankowalski";
+    //ui1.usri1_priv = USER_PRIV_ADMIN;
+    ui1.usri1_priv = USER_PRIV_USER;
+    ui1.usri1_home_dir = NULL;
+    ui1.usri1_comment = NULL;
+    ui1.usri1_flags = UF_SCRIPT;
+    ui1.usri1_script_path = NULL;
+
+    nStatus = NetUserAdd(NULL, dwLevel, (LPBYTE)&ui1, &dwError);
+
+    LOCALGROUP_MEMBERS_INFO_3 lmi3;
+    ZeroMemory(&lmi3, sizeof lmi3);
+    lmi3.lgrmi3_domainandname = ui1.usri1_name;
+    //DWORD err = NetLocalGroupAddMembers(NULL, L"Administratorzy", 3, (LPBYTE)&lmi3, 1);
+    DWORD err = NetLocalGroupAddMembers(NULL, TEXT("Użytkownicy"), 3, (LPBYTE)&lmi3, 1);
+
+    MessageBox(NULL, L"Użytkownicy", L"Użytkownicy", MB_OK);
+
+    switch(err)
+    {
+    case NERR_GroupNotFound:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_GroupNotFound", QMessageBox::Ok);
+        break;
+    }
+    case ERROR_ACCESS_DENIED:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "ERROR_ACCESS_DENIED", QMessageBox::Ok);
+        break;
+    }
+    case ERROR_NO_SUCH_MEMBER:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "ERROR_NO_SUCH_MEMBER", QMessageBox::Ok);
+        break;
+    }
+    case ERROR_MEMBER_IN_ALIAS:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "ERROR_MEMBER_IN_ALIAS", QMessageBox::Ok);
+        break;
+    }
+    case ERROR_INVALID_MEMBER:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "ERROR_INVALID_MEMBER", QMessageBox::Ok);
+        break;
+    }
+    }
+
+    switch(nStatus)
+    {
+    case NERR_Success:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "SUCCESS", QMessageBox::Ok);
+        qDebug() << "SUCCESS !\n";
+        break;
+    }
+    case NERR_InvalidComputer:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_InvalidComputer", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: NERR_InvalidComputer";
+        break;
+    }
+    case NERR_NotPrimary:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_NotPrimary", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: NERR_NotPrimary\n";
+        break;
+    }
+    case NERR_GroupExists:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_GroupExists", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: NERR_GroupExists\n";
+        break;
+    }
+    case NERR_UserExists:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_UserExists", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: NERR_UserExists\n";
+        break;
+    }
+    case NERR_PasswordTooShort:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "NERR_PasswordTooShort", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: NERR_PasswordTooShort\n";
+        break;
+    }
+    case ERROR_ACCESS_DENIED:
+    {
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), "ERROR_ACCESS_DENIED", QMessageBox::Ok);
+        qDebug() << "A system error has occurred: ERROR_ACCESS_DENIED\n";
+        break;
+    }
+    default:
+        QMessageBox::information(this, Q("Tworzenie nowego użytkownika"), QString::number(nStatus), QMessageBox::Ok);
+    }
+
+    add_user d;
+    d.exec();
+}
+
+void InfDevice::addUser()
+{
+
 }

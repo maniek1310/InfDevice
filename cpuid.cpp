@@ -9,7 +9,9 @@ void cpuid::view_info()
     unsigned long feature_info_edx = Fea_info_edx();
     unsigned long feature_info_ecx = Fea_info_ecx();
 
-    socket();
+    unsigned long verasd_info = Ver_info();
+
+    qDebug() << verasd_info;
 
     char fea_edx_1[32][30] = {"fpu", "vme", "de", "pse", "tsc", "msr",
                              "pae", "mce", "cx8", "apic", "", "sep",
@@ -261,4 +263,60 @@ unsigned long cpuid::socket()
     }
 
     return socket;
+}
+
+unsigned long cpuid::cache_l1_data()
+{
+    unsigned long cache_size;
+
+    __asm
+    {
+        mov eax, 80000005h
+        cpuid
+        mov cache_size, ecx
+    }
+
+    return ((cache_size & 0xFF000000) >> 24);
+}
+
+unsigned long cpuid::cache_l1_code()
+{
+    unsigned long cache_size;
+
+    __asm
+    {
+        mov eax, 80000005h
+        cpuid
+        mov cache_size, edx
+    }
+
+    return ((cache_size & 0xFF000000) >> 24);
+}
+
+unsigned long cpuid::cache_l2()
+{
+    unsigned long cache_size;
+
+    __asm
+    {
+        mov eax, 80000006h
+        cpuid
+        mov cache_size, ecx
+    }
+
+    return ((cache_size & 0xFFFF0000) >> 16);
+}
+
+unsigned long cpuid::cache_l3()
+{
+    unsigned long cache_size;
+
+    __asm
+    {
+        mov eax, 80000006h
+        cpuid
+        mov cache_size, edx
+    }
+
+    return ((cache_size & 0xFFFC0000) >> 18);
 }

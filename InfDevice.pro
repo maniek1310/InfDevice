@@ -14,9 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         infdevice.cpp \
-    cpuid.cpp
+    cpuid.cpp \
+    add_user.cpp
 
 HEADERS  += infdevice.h \
-    cpuid.h
+    cpuid.h \
+    add_user.h
 
-FORMS    += infdevice.ui
+FORMS    += infdevice.ui \
+    add_user.ui
+
+TRANSLATIONS += qt_pl.ts
